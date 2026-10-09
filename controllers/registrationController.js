@@ -15,6 +15,22 @@ const registerForEvent = async (req, res) => {
             });
         }
 
+        
+          // Check event capacity
+        const registeredCount = await Registration.countDocuments({
+        event: eventId,
+        status: "registered"
+         
+        });
+
+        if (registeredCount >= event.capacity) {
+        return res.status(400).json({
+        message: "Sorry, this event is fully booked"
+        });
+}
+
+
+
         const existingRegistration = await Registration.findOne({
             user: userId,
             event: eventId
